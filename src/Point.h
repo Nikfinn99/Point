@@ -42,6 +42,21 @@ struct Point : public Printable
         return c;
     }
 
+    /**
+     * returns a copy of point that is rotated around z axis by angle
+     * does not modify internal variables
+     * @param p_angle_deg angle to rotate in degrees
+     * @return copy of rotated point
+    */
+    Point rotateZ(const float p_angle_deg) const
+    {
+        float angle_rad = radians(p_angle_deg);
+        Point p;
+        p.x = x * cosf(angle_rad) - y * sinf(angle_rad);
+        p.y = x * sinf(angle_rad) + y * cosf(angle_rad);
+        return p;
+    }
+
     // overloaded operators
     void operator=(const Point &p);
     Point operator+(const Point &p);
