@@ -54,6 +54,7 @@ struct Point : public Printable
         Point p;
         p.x = x * cosf(angle_rad) - y * sinf(angle_rad);
         p.y = x * sinf(angle_rad) + y * cosf(angle_rad);
+        p.z = z;
         return p;
     }
 
