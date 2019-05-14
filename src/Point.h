@@ -48,14 +48,149 @@ struct Point : public Printable
      * @param p_angle_deg angle to rotate in degrees
      * @return copy of rotated point
     */
-    Point rotateZ(const float p_angle_deg) const
+    Point getRotateZ(const float p_angle_deg) const
     {
         float angle_rad = radians(p_angle_deg);
-        Point p;
+        Point p = *this;
         p.x = x * cosf(angle_rad) - y * sinf(angle_rad);
         p.y = x * sinf(angle_rad) + y * cosf(angle_rad);
-        p.z = z;
         return p;
+    }
+
+    /**
+     * rotate point around z axis by angle
+     * @param p_angle_deg angle to rotate in degrees
+    */
+    Point &rotateZ(const float p_angle_deg)
+    {
+        float angle_rad = radians(p_angle_deg);
+        x = x * cosf(angle_rad) - y * sinf(angle_rad);
+        y = x * sinf(angle_rad) + y * cosf(angle_rad);
+        return *this;
+    }
+
+    /**
+     * get length of vector in x-y plane
+    */
+    float getLengthXY()
+    {
+        return sqrt(sq(x) + sq(y));
+    }
+
+    /**
+     * get length of vector in x-y-z space
+    */
+    float getLengthXYZ()
+    {
+        return sqrt(sq(x) + sq(y) + sq(z));
+    }
+
+    /**
+     * returns copy of normalized vector
+     * this only considers x-y plane
+    */
+    Point getNormalizedXY() const
+    {
+        Point p = *this;
+        float length = p.getLengthXY();
+        p.x /= length;
+        p.y /= length;
+        return p;
+    }
+
+    /**
+     * returns copy of normalized vector
+     * this considers x-y-z space
+    */
+    Point getNormalizedXYZ() const
+    {
+        Point p = *this;
+        float length = p.getLengthXY();
+        p.x /= length;
+        p.y /= length;
+        p.z /= length;
+        return p;
+    }
+
+    /**
+     * normalize vector in x-y plane
+    */
+    Point &normalizeXY()
+    {
+        float length = this->getLengthXY();
+        x /= length;
+        y /= length;
+        return *this;
+    }
+
+    /**
+     * normalize vector in x-y-z space
+    */
+    Point &normalizeXYZ()
+    {
+        float length = this->getLengthXYZ();
+        x /= length;
+        y /= length;
+        z /= length;
+        return *this;
+    }
+
+    /**
+     * returns copy of vector limited to maximum length in x-y plane
+    */
+    Point getLimitLengthXY(float max_length) const
+    {
+        Point p = *this;
+        if (p.getLengthXY() > max_length)
+        {
+            p.normalizeXY();
+            p.x *= max_length;
+            p.y *= max_length;
+        }
+        return p;
+    }
+
+    /**
+     * returns copy of vector limited to maximum length in x-y-z space
+    */
+    Point getLimitLengthXYZ(float max_length) const
+    {
+        Point p = *this;
+        if (p.getLengthXYZ() > max_length)
+        {
+            p.normalizeXYZ();
+            p *= max_length;
+        }
+        return p;
+    }
+
+    /**
+     * limits length of vector to max length in x-y plane
+    */
+    Point &limitLengthXY(float max_length)
+    {
+        if (this->getLengthXY() > max_length)
+        {
+            this->normalizeXY();
+            x *= max_length;
+            y *= max_length;
+        }
+        return *this;
+    }
+
+    /**
+     * limits length of vector to max length in x-y-z space
+    */
+    Point &limitLengthXYZ(float max_length)
+    {
+        if (this->getLengthXYZ() > max_length)
+        {
+            this->normalizeXYZ();
+            x *= max_length;
+            y *= max_length;
+            z *= max_length;
+        }
+        return *this;
     }
 
     // overloaded operators
